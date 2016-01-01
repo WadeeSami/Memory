@@ -1,9 +1,6 @@
-
-    # add game state logic here
-    
+# add game state logic here
 import simplegui
 import random
-
 deck = []
 exposed = []
 flipped = False # a flag to make sure that the clicked card is not previously face up
@@ -13,19 +10,20 @@ face_up = [-1 , -1 ]
 match = False
 # helper function to initialize globals
 def new_game():
-    global deck , exposed , state
+    global deck , exposed , state , count
+    count = 0
     state = 0
     list_a = range(0 , 8)
     list_b = range(0 , 8)
     deck = list_a + list_b
     random.shuffle(deck)
+    label.set_text("Turns = " + str(count))
     exposed = [0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ,0 , 0 , 0 , 0 ,0 , 0 , 0 , 0]
      
 # define event handlers
 def mouseclick(pos):
     # add game state logic here
     global exposed , state , count , match
-    count = count + 1
     #get the index of the clicked card
     index = pos[0]  / 50
     
@@ -33,12 +31,13 @@ def mouseclick(pos):
         exposed[index] = 1
         flipped = True
     else:
-        print "previously"
         return
     if state == 0:
         state = 1
         face_up[0] = index
     elif state == 1:
+        count = count + 1
+        label.set_text("Turns = " + str(count))
         state = 2 #now check if both cards matches
         face_up[1] = index
         if deck[face_up[0]] != deck[face_up[1]]:#index us  for the recently opened card
@@ -49,7 +48,6 @@ def mouseclick(pos):
     else:
         state = 1
         if not match:#face the old ones down
-            print "not the same"
             exposed[face_up[0]] = 0
             exposed[face_up[1]] = 0
             face_up[1] = -1
